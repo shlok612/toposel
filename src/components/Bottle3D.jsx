@@ -111,29 +111,85 @@ const Bottle3D = () => {
     // Create text on transparent canvas to overlay on top of the purple body
     ctx.clearRect(0, 0, 1024, 512);
     
+    // --- FRONT SIDE (Centered at X = 256) ---
     // "bolly" brand logo text
     ctx.fillStyle = '#FFFFFF';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.font = '900 142px "Outfit", "Arial Black", sans-serif';
-    ctx.fillText('bolly', 512, 170);
+    ctx.fillText('bolly', 256, 170);
 
     // "Clarify" text (using neon-green accent color)
     ctx.fillStyle = '#D2F53C';
     ctx.font = '700 48px "Outfit", sans-serif';
-    ctx.fillText('Clarify', 512, 275);
+    ctx.fillText('Clarify', 256, 275);
 
     // "Shampoo" text
     ctx.fillStyle = '#FFFFFF';
     ctx.font = '300 44px "Inter", sans-serif';
-    ctx.fillText('Shampoo', 512, 330);
+    ctx.fillText('Shampoo', 256, 330);
 
     // Ingredients / Description
     ctx.fillStyle = 'rgba(255, 255, 255, 0.72)';
     ctx.font = '500 21px "Inter", sans-serif';
-    ctx.fillText('WITH TEA TREE & PEPPERMINT OIL', 512, 400);
+    ctx.fillText('WITH TEA TREE & PEPPERMINT OIL', 256, 400);
     ctx.font = '400 17px "Inter", sans-serif';
-    ctx.fillText('FRESH BODY • CLEAN HAIR', 512, 435);
+    ctx.fillText('FRESH BODY • CLEAN HAIR', 256, 435);
+
+    // --- BACK SIDE (Centered at X = 768) ---
+    // Section: Directions
+    ctx.fillStyle = '#D2F53C';
+    ctx.font = '700 20px "Outfit", sans-serif';
+    ctx.fillText('DIRECTIONS', 768, 60);
+
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '500 14px "Inter", sans-serif';
+    ctx.fillText('Apply to wet hair, massage into a rich lather,', 768, 90);
+    ctx.fillText('and rinse thoroughly. Repeat if desired.', 768, 110);
+
+    // Section: Ingredients
+    ctx.fillStyle = '#D2F53C';
+    ctx.font = '700 20px "Outfit", sans-serif';
+    ctx.fillText('INGREDIENTS', 768, 160);
+
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.72)';
+    ctx.font = '400 12px "Inter", sans-serif';
+    ctx.fillText('Aqua, Cocamidopropyl Betaine, Sodium Cocoyl Isethionate, Glycerin,', 768, 190);
+    ctx.fillText('Melaleuca Alternifolia (Tea Tree) Leaf Oil, Mentha Piperita (Peppermint) Oil,', 768, 210);
+    ctx.fillText('Aloe Barbadensis Leaf Juice, Citric Acid, Tocopheryl Acetate, Limonene,', 768, 230);
+    ctx.fillText('Linalool, Potassium Sorbate, Sodium Benzoate, Organic Essential Oils.', 768, 250);
+
+    // Section: Caution
+    ctx.fillStyle = '#D2F53C';
+    ctx.font = '700 20px "Outfit", sans-serif';
+    ctx.fillText('WARNINGS & CAUTION', 768, 300);
+
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+    ctx.font = '500 13px "Inter", sans-serif';
+    ctx.fillText('For external use only. Avoid contact with eyes.', 768, 325);
+    ctx.fillText('If contact occurs, rinse thoroughly with water.', 768, 345);
+
+    // Bottle capacity / Details
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '700 16px "Outfit", sans-serif';
+    ctx.fillText('250ml 8.4 fl. oz. e', 768, 395);
+
+    // Draw Barcode Card
+    ctx.fillStyle = '#FFFFFF';
+    // Center of barcode card is X=768. Width is 140, height is 45.
+    ctx.fillRect(768 - 70, 420, 140, 45);
+    
+    // Draw Barcode Stripes
+    ctx.fillStyle = '#000000';
+    let barX = 768 - 62;
+    const barPattern = [2, 1, 3, 1, 4, 2, 1, 3, 2, 2, 1, 4, 1, 3, 2, 1, 3, 1, 2, 4, 1, 2, 3, 1, 2];
+    for (let i = 0; i < barPattern.length; i++) {
+      const width = barPattern[i];
+      if (i % 2 === 0) {
+        ctx.fillRect(barX, 425, width * 2, 35);
+      }
+      barX += width * 2 + 1;
+    }
 
     const labelTex = new THREE.CanvasTexture(labelCanvas);
     labelTex.colorSpace = THREE.SRGBColorSpace;
@@ -153,7 +209,7 @@ const Bottle3D = () => {
     const labelMesh = new THREE.Mesh(labelGeom, labelMat);
     labelMesh.position.y = -0.3; // position on cylindrical section
     // In Three.js, Cylinder map wraps from the back, meaning center of canvas (512, Y) is at front (+Z direction)
-    labelMesh.rotation.y = 0; 
+    labelMesh.rotation.y = Math.PI / 2; 
     bottleGroup.add(labelMesh);
 
     // 3. Pump Mechanism
